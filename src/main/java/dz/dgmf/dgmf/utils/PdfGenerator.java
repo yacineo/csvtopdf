@@ -24,7 +24,12 @@ public class PdfGenerator {
                 document.addPage(page);
 
                 try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                    drawHeader(contentStream, pageNumber, totalPages);
+                    if (pageNumber == 1) {
+                        drawHeader(contentStream, pageNumber, totalPages, true);
+                    }
+                    else {
+                        drawHeader(contentStream, pageNumber, totalPages, false);
+                    }
                     drawTable(contentStream, csvData, pageNumber, totalPages, rowsPerPage);
                 }
             }
@@ -35,24 +40,26 @@ public class PdfGenerator {
         }
     }
 
-    private static void drawHeader(PDPageContentStream contentStream, int pageNumber, int totalPages) throws Exception {
+    private static void drawHeader(PDPageContentStream contentStream, int pageNumber, int totalPages, boolean drawHeaderLines) throws Exception {
         contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
 
         float startX = 50;
         float startY = 750;
 
-        String[] headerLines = {
-                "MINISTERE DES FINANCES",
-                "TRESORERIE DE TRESORERIE D'ALGER",
-                "                    MOUVEMENTS DE LA JOURNEE DU 15/11/2022"
-        };
+        if (drawHeaderLines) {
+            String[] headerLines = {
+                    "MINISTERE DES FINANCES",
+                    "TRESORERIE DE TRESORERIE D'ALGER",
+                    "                    MOUVEMENTS DE LA JOURNEE DU 15/11/2022"
+            };
 
-        for (String line : headerLines) {
-            contentStream.beginText();
-            contentStream.newLineAtOffset(startX, startY);
-            contentStream.showText(line);
-            contentStream.endText();
-            startY -= 20;
+            for (String line : headerLines) {
+                contentStream.beginText();
+                contentStream.newLineAtOffset(startX, startY);
+                contentStream.showText(line);
+                contentStream.endText();
+                startY -= 20;
+            }
         }
 
         // Add page number at the top right
