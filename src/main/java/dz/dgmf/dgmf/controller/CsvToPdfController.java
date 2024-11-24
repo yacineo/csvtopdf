@@ -2,6 +2,8 @@ package dz.dgmf.dgmf.controller;
 
 import dz.dgmf.dgmf.utils.CsvUtils;
 import dz.dgmf.dgmf.utils.PdfGenerator;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +19,9 @@ public class CsvToPdfController {
     public ResponseEntity<byte[]> generatePdf() {
         try {
 
-            List<String[]> csvData = CsvUtils.readCsv("C:/dev/workspaces/java/dgmf/test.csv");
-            byte[] pdfBytes =
-                    PdfGenerator.generatePdfWithHeader(csvData);
+            Resource resource = new ClassPathResource("data/test.csv");
+            List<String[]> csvData = CsvUtils.readCsv(resource);
+            byte[] pdfBytes = PdfGenerator.generatePdfWithHeader(csvData);
 
 
             // 3. Return PDF as response
